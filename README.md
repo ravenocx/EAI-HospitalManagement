@@ -6,7 +6,7 @@
 
 
 ### How to run
-#### Build the container
+#### Build the container for database
 ```bash
 docker-compose up
 ```
