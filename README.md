@@ -5,11 +5,25 @@
 - A Linux environment (WSL / MacOS should be fine)
 
 
-### How to run
-#### Build the container for database
+### Setting up database
+### Install golang migrate
 ```bash
-docker-compose up
+$ wget -qO- https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
+$ sudo mv migrate.linux-amd64 /usr/local/bin/migrate
+$ sudo chmod +x /usr/local/bin/migrate
 ```
+### Verify the installation
+```bash
+migrate -version
+```
+
+### Run the migration 
+```bash
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable" -path [SERVICE_NAME//db/migrations -verbose up
+```
+Repeat until all service table is created
+
+### How to run
 #### Build the image for each service
 Navigate to the directory for each service:
 ```bash
