@@ -107,9 +107,15 @@ func (c *UserController) NurseAccess(ctx *fiber.Ctx) error {
 	}
 
 	context := context.Background()
-	err := c.service.AccessNurse(context, id, accessPayload)
+	user, err := c.service.AccessNurse(context, id, accessPayload)
 
 	if (err != responses.CustomError{}) {
+		return ctx.Status(err.Status()).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err = c.service.PublishToRabbitmq(user); (err != responses.CustomError{}) {
 		return ctx.Status(err.Status()).JSON(fiber.Map{
 			"message": err.Error(),
 		})

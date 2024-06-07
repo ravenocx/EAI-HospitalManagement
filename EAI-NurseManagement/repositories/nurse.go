@@ -61,10 +61,10 @@ func (r *nurseRepositories) CreateNurseUser(ctx context.Context, user *models.Nu
 
 func (r *nurseRepositories) GetUserNipById(ctx context.Context, id string) (*models.User, error) {
 	var user models.User
-	query := "SELECT nip FROM users WHERE id = $1"
+	query := "SELECT id,nip,name,identity_card_scan_img FROM users WHERE id = $1"
 
 	row := r.db.QueryRow(ctx, query, id)
-	err := row.Scan(&user.Nip)
+	err := row.Scan(&user.ID, &user.Nip, &user.Name, &user.IdentityCardScanImg)
 	if err != nil {
 		return nil, err
 	}
