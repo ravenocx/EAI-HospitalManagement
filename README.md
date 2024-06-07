@@ -18,10 +18,12 @@ migrate -version
 ```
 
 ### Run the migration 
+Note : run the migration for AuthService->Patient->MedicalRecord
 ```bash
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable" -path [SERVICE_NAME//db/migrations -verbose up
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable" -path [SERVICE_NAME]//db/migrations -verbose up
 ```
 Repeat until all service table is created
+
 
 ### How to run
 #### Build the image for each service
