@@ -76,7 +76,7 @@ func main() {
 		for {
 			if len(msgs) == 0 {
 				log.Printf(" [*] Logging Nurse Access......")
-				time.Sleep(5 * time.Second)
+				time.Sleep(5 * time.Minute)
 			}
 		}
 	}()
