@@ -89,7 +89,7 @@ func (s *nurseService) UpdateNurse(ctx context.Context, nurseId string, updatePa
 		}
 	}
 
-	if existingUser != nil {
+	if existingUser != nil && existingUser.Nip != strconv.FormatInt(updatePayload.Nip, 10) {
 		return responses.NewConflictError("conflict, nip already used")
 	}
 
