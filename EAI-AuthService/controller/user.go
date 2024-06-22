@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ravenocx/hospital-mgt/models"
@@ -22,17 +21,17 @@ func NewUserController(service service.UserService) *UserController {
 }
 
 type registerResponse struct {
-	UserId      string `json:"userId"`
-	Nip         int64  `json:"nip"`
-	Name        string `json:"name"`
-	Token       token  `json:"token"`
+	UserId string `json:"userId"`
+	Nip    int64  `json:"nip"`
+	Name   string `json:"name"`
+	Token  token  `json:"token"`
 }
 
 type loginResponse struct {
-	UserId      string `json:"userId"`
-	Nip         int64  `json:"nip"`
-	Name        string `json:"name"`
-	Token       token  `json:"token"`
+	UserId string `json:"userId"`
+	Nip    int64  `json:"nip"`
+	Name   string `json:"name"`
+	Token  token  `json:"token"`
 }
 
 type token struct {
@@ -56,11 +55,11 @@ func (c *UserController) Register(ctx *fiber.Ctx) error {
 	}
 
 	responseData := registerResponse{
-		UserId:      userId,
-		Nip:         newUser.Nip,
-		Name:        newUser.Name,
+		UserId: userId,
+		Nip:    newUser.Nip,
+		Name:   newUser.Name,
 		Token: token{
-			AccessToken: tokens.Access,
+			AccessToken:  tokens.Access,
 			RefreshToken: tokens.Refresh,
 		},
 	}
@@ -91,11 +90,11 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 	}
 
 	responseData := loginResponse{
-		UserId:      userId,
-		Nip:         user.Nip,
-		Name:        name,
+		UserId: userId,
+		Nip:    user.Nip,
+		Name:   name,
 		Token: token{
-			AccessToken: tokens.Access,
+			AccessToken:  tokens.Access,
 			RefreshToken: tokens.Refresh,
 		},
 	}
@@ -107,23 +106,27 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 }
 
 func (c *UserController) RenewTokens(ctx *fiber.Ctx) error {
-	now := time.Now().Unix()
+	// now := time.Now().Unix()
 
 	claims, err := utils.ExtractTokenMetadata(ctx)
 	if err != nil {
-		return responses.NewInternalServerError(err.Error())
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
-	expiresAccessToken := claims.Expires
+	// expiresAccessToken := claims.Expires
 
-	if now > expiresAccessToken {
-		return responses.NewUnauthorizedError("your token is not expired yet")
-	}
+	// if now > expiresAccessToken {
+	// 	return responses.NewUnauthorizedError("your token is not expired yet")
+	// }
 
 	renew := &models.Renew{}
 
 	if err := ctx.BodyParser(renew); err != nil {
-		return responses.NewBadRequestError(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	context := context.Background()
@@ -170,11 +173,11 @@ func (c *UserController) NurseLogin(ctx *fiber.Ctx) error {
 	}
 
 	responseData := loginResponse{
-		UserId:      userId,
-		Nip:         user.Nip,
-		Name:        name,
+		UserId: userId,
+		Nip:    user.Nip,
+		Name:   name,
 		Token: token{
-			AccessToken: tokens.Access,
+			AccessToken:  tokens.Access,
 			RefreshToken: tokens.Refresh,
 		},
 	}
