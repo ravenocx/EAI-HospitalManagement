@@ -73,14 +73,19 @@ func (c *MedicalRecordController) GetRecord(ctx *fiber.Ctx) error {
 	}
 
 	limit, err := strconv.Atoi(ctx.Query("limit", "5"))
+	log.Printf("limit : %+v", limit)
 	if err != nil || limit < 0 {
 		limit = 5
 	}
+	log.Printf("limit : %+v", limit)
 
-	offset, err := strconv.Atoi(ctx.Query("limit", "0"))
+
+	offset, err := strconv.Atoi(ctx.Query("offset", "0"))
 	if err != nil || offset < 0 {
 		offset = 0
 	}
+	log.Printf("offset : %+v", offset)
+
 
 	nip := ctx.Query("nip")
 	_, err = strconv.ParseInt(nip, 10, 64)

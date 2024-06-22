@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"strings"
 
@@ -68,8 +69,10 @@ func (c *PatientController) GetPatient(ctx *fiber.Ctx) error {
 	if err != nil || limit < 0 {
 		limit = 5
 	}
+	log.Printf("limit : %+v", limit)
 
-	offset, err := strconv.Atoi(ctx.Query("limit", "0"))
+
+	offset, err := strconv.Atoi(ctx.Query("offset", "0"))
 	if err != nil || offset < 0 {
 		offset = 0
 	}
@@ -80,11 +83,11 @@ func (c *PatientController) GetPatient(ctx *fiber.Ctx) error {
 
 	patientQuery := models.GetPatientQueries{
 		IdentityNumber: identNumber,
-		Limit: limit,
-		Offset: offset,
-		Name: name,
-		PhoneNumber: phoneNumber,
-		CreatedAt: createdAt,
+		Limit:          limit,
+		Offset:         offset,
+		Name:           name,
+		PhoneNumber:    phoneNumber,
+		CreatedAt:      createdAt,
 	}
 
 	context := context.Background()

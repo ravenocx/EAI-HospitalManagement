@@ -135,7 +135,7 @@ func (c *UserController) GetUser(ctx *fiber.Ctx) error {
 		limit = 5
 	}
 
-	offset, err := strconv.Atoi(ctx.Query("limit", "0"))
+	offset, err := strconv.Atoi(ctx.Query("offset", "0"))
 	if err != nil || offset < 0 {
 		offset = 0
 	}
