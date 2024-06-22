@@ -25,14 +25,19 @@ type registerResponse struct {
 	UserId      string `json:"userId"`
 	Nip         int64  `json:"nip"`
 	Name        string `json:"name"`
-	AccessToken string `json:"accessToken,omitempty"`
+	Token       token  `json:"token"`
 }
 
 type loginResponse struct {
 	UserId      string `json:"userId"`
 	Nip         int64  `json:"nip"`
 	Name        string `json:"name"`
-	AccessToken string `json:"accessToken"`
+	Token       token  `json:"token"`
+}
+
+type token struct {
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 func (c *UserController) Register(ctx *fiber.Ctx) error {
@@ -43,7 +48,7 @@ func (c *UserController) Register(ctx *fiber.Ctx) error {
 
 	context := context.Background()
 
-	userId, accessToken, err := c.service.Register(context, newUser)
+	userId, tokens, err := c.service.Register(context, newUser)
 	if (err != responses.CustomError{}) {
 		return ctx.Status(err.Status()).JSON(fiber.Map{
 			"message": err.Error(),
@@ -54,7 +59,10 @@ func (c *UserController) Register(ctx *fiber.Ctx) error {
 		UserId:      userId,
 		Nip:         newUser.Nip,
 		Name:        newUser.Name,
-		AccessToken: accessToken,
+		Token: token{
+			AccessToken: tokens.Access,
+			RefreshToken: tokens.Refresh,
+		},
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
@@ -75,7 +83,7 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 	}
 	context := context.Background()
 
-	userId, name, accessToken, err := c.service.Login(context, loginPayload)
+	userId, name, tokens, err := c.service.Login(context, loginPayload)
 	if (err != responses.CustomError{}) {
 		return ctx.Status(err.Status()).JSON(fiber.Map{
 			"message": err.Error(),
@@ -86,7 +94,10 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 		UserId:      userId,
 		Nip:         user.Nip,
 		Name:        name,
-		AccessToken: accessToken,
+		Token: token{
+			AccessToken: tokens.Access,
+			RefreshToken: tokens.Refresh,
+		},
 	}
 
 	return ctx.JSON(fiber.Map{
@@ -151,7 +162,7 @@ func (c *UserController) NurseLogin(ctx *fiber.Ctx) error {
 
 	context := context.Background()
 
-	userId, name, accessToken, err := c.service.NurseLogin(context, loginPayload)
+	userId, name, tokens, err := c.service.NurseLogin(context, loginPayload)
 	if (err != responses.CustomError{}) {
 		return ctx.Status(err.Status()).JSON(fiber.Map{
 			"message": err.Error(),
@@ -162,7 +173,10 @@ func (c *UserController) NurseLogin(ctx *fiber.Ctx) error {
 		UserId:      userId,
 		Nip:         user.Nip,
 		Name:        name,
-		AccessToken: accessToken,
+		Token: token{
+			AccessToken: tokens.Access,
+			RefreshToken: tokens.Refresh,
+		},
 	}
 
 	return ctx.JSON(fiber.Map{
