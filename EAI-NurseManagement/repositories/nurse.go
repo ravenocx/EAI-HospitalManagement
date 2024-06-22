@@ -98,7 +98,7 @@ func (r *nurseRepositories) UpdateAccessNurse(ctx context.Context, nurseId strin
 func (r *nurseRepositories) GetUsers(ctx context.Context, filter models.GetUserQueries) ([]models.GetUserResponse, error) {
 	var users []models.GetUserResponse
 	var createdAt time.Time
-	query := "SELECT id, nip, name, created_at FROM users"
+	query := "SELECT id, nip, name,access, created_at FROM users"
 
 	query += getUserConstructWhereQuery(filter)
 
@@ -123,7 +123,7 @@ func (r *nurseRepositories) GetUsers(ctx context.Context, filter models.GetUserQ
 	var nip string
 	for rows.Next() {
 		user := models.GetUserResponse{}
-		err := rows.Scan(&user.UserId, &nip, &user.Name, &createdAt)
+		err := rows.Scan(&user.UserId, &nip, &user.Name, &user.Access, &createdAt)
 		if err != nil {
 			return nil, err
 		}

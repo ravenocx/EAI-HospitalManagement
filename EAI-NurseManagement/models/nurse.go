@@ -48,6 +48,7 @@ type GetUserResponse struct {
 	UserId    string `db:"id" json:"userId" query:"userId"`
 	Nip       int64  `db:"nip" json:"nip" query:"nip"`
 	Name      string `db:"name" json:"name" query:"name"`
+	Access    bool   `db:"access" json:"access"`
 	CreatedAt string `db:"created_at" json:"createdAt" query:"createdAt"`
 }
 
